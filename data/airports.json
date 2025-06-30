@@ -1,0 +1,38 @@
+{
+  "IRFD": {
+    "name": "Rockford Intl",
+    "charts": [
+      { "title": "Airport Diagram", "filename": "Airport Diagram.pdf" },
+      { "title": "Departures", "filename": "Departures.pdf" },
+      { "title": "Arrivals", "filename": "Arrivals.pdf" },
+      { "title": "ILS/LOC/VIS Approaches", "filename": "ILSLOC.pdf" }
+    ]
+  },
+  "ITKO": {
+    "name": "Tokyo Intl",
+    "charts": [
+      { "title": "Airport Diagram", "filename": "Airport Diagram.pdf" },
+      { "title": "Departures", "filename": "Departures.pdf" },
+      { "title": "Arrivals", "filename": "Arrivals.pdf" },
+      { "title": "ILS/LOC/VIS Approaches", "filename": "ILSLOC.pdf" }
+    ]
+  },
+    "IPPH": {
+    "name": "Perth Intl",
+    "charts": [
+      { "title": "Airport Diagram", "filename": "Airport Diagram.pdf" },
+      { "title": "Departures", "filename": "Departures.pdf" },
+      { "title": "Arrivals", "filename": "Arrivals.pdf" },
+      { "title": "ILS/LOC/VIS Approaches", "filename": "ILSLOC.pdf" }
+    ]
+  },
+     "IBTH": {
+    "name": "St. Barthelemy Intl",
+    "charts": [
+      { "title": "Airport Diagram", "filename": "Airport Diagram.pdf" },
+      { "title": "Departures", "filename": "Departures.pdf" },
+      { "title": "Arrivals", "filename": "Arrivals.pdf" },
+      { "title": "ILS/LOC/VIS Approaches", "filename": "ILSLOC.pdf" }
+    ]
+  }
+}

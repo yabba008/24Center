@@ -1,0 +1,43 @@
+:root {
+  --bg: #1e1e1e;
+  --text: #e0e0e0;
+  --card: #2c2c2c;
+  --highlight: #3c3c3c;
+  --border: #444;
+}
+
+body {
+  font-family: sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 2rem;
+  margin: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+  border: 1px solid var(--border);
+}
+
+select {
+  background: var(--highlight);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.chart-item {
+  color: #9bdfff;
+  text-decoration: none;
+}
+
+.chart-item:hover {
+  text-decoration: underline;
+}
