@@ -28,29 +28,80 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function createCollapsible(title, contentId) {  // Aka the biggest pain to get perfect.
+  const container = document.createElement('div');
+  container.style.backgroundColor = '#2c2c2c';
+  container.style.color = '#e0e0e0';
+  container.style.padding = '1rem';
+  container.style.borderRadius = '6px';
+  container.style.border = '1px solid #444';
+  container.style.boxShadow = '0 0 10px #000';
+  container.style.marginBottom = '1rem';
+  container.style.userSelect = 'none';
+
+  const button = document.createElement('button');
+  button.textContent = title;
+  button.style.width = '100%';
+  button.style.background = 'none';
+  button.style.border = 'none';
+  button.style.color = '#6ee7b7';
+  button.style.fontSize = '1.1rem';
+  button.style.fontWeight = 'bold';
+  button.style.textAlign = 'left';
+  button.style.padding = '0';
+  button.style.cursor = 'pointer';
+  button.style.outline = 'none';
+
+  const content = document.getElementById(contentId);
+  content.style.overflow = 'hidden';
+  content.style.transition = 'max-height 0.3s ease, padding 0.3s ease';
+  content.style.maxHeight = '0';
+  content.style.paddingTop = '0';
+  content.style.paddingBottom = '0';
+
+  container.appendChild(button);
+  container.appendChild(content.parentNode.removeChild(content));
+
+  button.addEventListener('click', () => {
+    if (content.style.maxHeight === '0px' || content.style.maxHeight === '') {
+      content.style.maxHeight = content.scrollHeight + 20 + 'px';
+      content.style.paddingTop = '1rem';
+      content.style.paddingBottom = '1rem';
+    } else {
+      content.style.maxHeight = '0';
+      content.style.paddingTop = '0';
+      content.style.paddingBottom = '0';
+    }
+  });
+
+  return container;
+}
+
 async function loadATCStatus() {
   try {
     const response = await fetch('https://ptfs.app/api/controllers');
     const data = await response.json();
 
-    const atcContainer = document.getElementById('atc-status');
-    atcContainer.innerHTML = '';
+    const atcContent = document.getElementById('atc-status');
+    atcContent.innerHTML = '';
+    atcContent.style.color = '#e0e0e0';
 
     const active = data.filter(entry => entry.holder !== '');
 
     if (active.length === 0) {
-      atcContainer.innerHTML = '<p>No active ATC.</p>';
+      atcContent.innerHTML = '<p>No active ATC.</p>';
       return;
     }
 
     active.forEach(ctrl => {
       const div = document.createElement('div');
       div.className = 'atc-entry';
+      div.style.marginBottom = '10px';
       div.innerHTML = `
         <strong>${ctrl.airport}</strong> - ${ctrl.position}<br>
         <span style="color: #6ee7b7;">${ctrl.holder}</span>
       `;
-      atcContainer.appendChild(div);
+      atcContent.appendChild(div);
     });
   } catch (err) {
     console.error('Error loading ATC data:', err);
@@ -58,6 +109,61 @@ async function loadATCStatus() {
   }
 }
 
-loadATCStatus();
+async function loadFlightPlans() {
+  try {
+    const response = await fetch('null', {  // Awaiting PTFS API endpoint for flight plans
+      headers: {
+        'Authorization': 'null'
+      }
+    });
+    const data = await response.json();
 
-setInterval(loadATCStatus, 30000);
+    const flightPlanContent = document.getElementById('flight-plan-status');
+    flightPlanContent.innerHTML = '';
+    flightPlanContent.style.color = '#e0e0e0';
+
+    if (!data || data.length === 0) {
+      flightPlanContent.innerHTML = '<p>No active flight plans.</p>';
+      return;
+    }
+
+    data.forEach(plan => {
+      const div = document.createElement('div');
+      div.className = 'flight-plan-entry';
+      div.style.marginBottom = '10px';
+      div.innerHTML = `
+        <strong style="color:#6ee7b7;">${plan.callsign || 'No callsign'}</strong> | ${plan.type || 'Unknown aircraft'}<br>
+        <em>${plan.departing || 'N/A'} → ${plan.arriving || 'N/A'}</em><br>
+        Route: ${plan.route || 'N/A'}<br>
+        Altitude: ${plan.altitude ? plan.altitude + ' ft' : 'N/A'}
+      `;
+      flightPlanContent.appendChild(div);
+    });
+  } catch (err) {
+    console.error('Error loading flight plans:', err);
+    document.getElementById('flight-plan-status').innerText = 'Error loading flight plans.';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {  
+    const atcWrapper = createCollapsible('Active ATC', 'atc-status');
+    const flightPlanWrapper = createCollapsible('INDEV | Active Flight Plans', 'flight-plan-status');
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.parentNode.insertBefore(atcWrapper, footer);
+        footer.parentNode.insertBefore(flightPlanWrapper, footer);
+    } else {
+        document.body.appendChild(atcWrapper);
+        document.body.appendChild(flightPlanWrapper);
+    }
+
+    loadATCStatus();
+    setInterval(loadATCStatus, 30000);
+
+    loadFlightPlans();
+    setInterval(loadFlightPlans, 30000);
+});
+
+
+

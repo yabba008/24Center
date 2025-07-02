@@ -28,21 +28,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit();
 });
-
-const RPC = require('discord-rpc');
-const clientId = '1389328109995688140'; 
-
-const rpc = new RPC.Client({ transport: 'ipc' });
-
-rpc.on('ready', () => {
-  rpc.setActivity({
-    details: 'Browsing charts',
-    startTimestamp: new Date(),
-    largeImageKey: 'logo', 
-    largeImageText: '24Charts',
-    instance: false,
-  });
-});
-
-// Connect to Discord
-rpc.login({ clientId }).catch(console.error);

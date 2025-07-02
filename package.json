@@ -1,7 +1,7 @@
 {
-  "name": "24Charts",
-  "version": "1.0.0",
-  "description": "Chart selection and ATC monitoring for ATC24",
+  "name": "24Center",
+  "version": "1.1.0",
+  "description": "An entire suite designed for the PTFS Roblox game and the ATC24 group.",
   "author": "Landon Kerns",
   "license": "GPL-3.0",
   "main": "main.js",
@@ -10,17 +10,14 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.2424.24charts",
-    "productName": "24Charts",
+    "appId": "com.2424.24center",
+    "productName": "24Center",
     "files": [
       "**/*"
     ],
     "win": {
       "target": "nsis"
     }
-  },
-  "dependencies": {
-    "discord-rpc": "^4.0.1"
   },
   "devDependencies": {
     "electron": "^28.3.3",
