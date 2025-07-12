@@ -111,51 +111,54 @@ async function loadATCStatus() {
 
 async function loadFlightPlans() {
   try {
-    const response = await fetch('null', {  // Awaiting PTFS API endpoint for flight plans
-      headers: {
-        'Authorization': 'null'
-      }
-    });
+    const response = await fetch('https://24data.ptfs.app/acft-data'); // Use real endpoint
     const data = await response.json();
 
-    const flightPlanContent = document.getElementById('flight-plan-status');
-    flightPlanContent.innerHTML = '';
-    flightPlanContent.style.color = '#e0e0e0';
+    const flightTrackerContent = document.getElementById('flight-tracker-status');
+    flightTrackerContent.innerHTML = '';
+    flightTrackerContent.style.color = '#e0e0e0';
 
-    if (!data || data.length === 0) {
-      flightPlanContent.innerHTML = '<p>No active flight plans.</p>';
+    const entries = Object.entries(data);
+    if (!entries.length) {
+      flightTrackerContent.innerHTML = '<p>No active aircraft.</p>';
       return;
     }
 
-    data.forEach(plan => {
+    entries.forEach(([callsign, details]) => {
       const div = document.createElement('div');
-      div.className = 'flight-plan-entry';
+      div.className = 'flight-tracker-entry';
       div.style.marginBottom = '10px';
+
+      const isGround = details.isOnGround ? '🛬 Ground' : '✈️ Airborne';
+
       div.innerHTML = `
-        <strong style="color:#6ee7b7;">${plan.callsign || 'No callsign'}</strong> | ${plan.type || 'Unknown aircraft'}<br>
-        <em>${plan.departing || 'N/A'} → ${plan.arriving || 'N/A'}</em><br>
-        Route: ${plan.route || 'N/A'}<br>
-        Altitude: ${plan.altitude ? plan.altitude + ' ft' : 'N/A'}
+        <strong style="color:#6ee7b7;">${callsign}</strong> | ${details.aircraftType}<br>
+        Pilot: ${details.playerName}<br>
+        Altitude: ${details.altitude} ft | Speed: ${Math.round(details.speed)} kts<br>
+        Heading: ${details.heading}° | ${isGround}<br>
+        Wind: ${details.wind}
       `;
-      flightPlanContent.appendChild(div);
+      flightTrackerContent.appendChild(div);
     });
   } catch (err) {
-    console.error('Error loading flight plans:', err);
-    document.getElementById('flight-plan-status').innerText = 'Error loading flight plans.';
+    console.error('Error loading aircraft data:', err);
+    document.getElementById('flight-tracker-status').innerText = 'Error loading aircraft data.';
   }
 }
 
+
+
 window.addEventListener('DOMContentLoaded', () => {  
     const atcWrapper = createCollapsible('Active ATC', 'atc-status');
-    const flightPlanWrapper = createCollapsible('INDEV | Active Flight Plans', 'flight-plan-status');
+    const flightTrackerWrapper = createCollapsible('Active Flight Tracker', 'flight-tracker-status');
 
     const footer = document.querySelector('footer');
     if (footer) {
         footer.parentNode.insertBefore(atcWrapper, footer);
-        footer.parentNode.insertBefore(flightPlanWrapper, footer);
+        footer.parentNode.insertBefore(flightTrackerWrapper, footer);
     } else {
         document.body.appendChild(atcWrapper);
-        document.body.appendChild(flightPlanWrapper);
+        document.body.appendChild(flightTrackerWrapper);
     }
 
     loadATCStatus();
@@ -164,6 +167,7 @@ window.addEventListener('DOMContentLoaded', () => {
     loadFlightPlans();
     setInterval(loadFlightPlans, 30000);
 });
+
 
 
 
