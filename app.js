@@ -111,7 +111,7 @@ async function loadATCStatus() {
 
 async function loadFlightPlans() {
   try {
-    const response = await fetch('https://24data.ptfs.app/acft-data'); // Use real endpoint
+    const response = await fetch('https://24data.ptfs.app/acft-data');
     const data = await response.json();
 
     const flightTrackerContent = document.getElementById('flight-tracker-status');
