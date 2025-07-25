@@ -79,14 +79,14 @@ function createCollapsible(title, contentId) {  // Aka the biggest pain to get p
 
 async function loadATCStatus() {
   try {
-    const response = await fetch('https://ptfs.app/api/controllers');
+    const response = await fetch('https://24data.ptfs.app/controllers');
     const data = await response.json();
 
     const atcContent = document.getElementById('atc-status');
     atcContent.innerHTML = '';
     atcContent.style.color = '#e0e0e0';
 
-    const active = data.filter(entry => entry.holder !== '');
+    const active = data.filter(entry => entry.holder !== null);
 
     if (active.length === 0) {
       atcContent.innerHTML = '<p>No active ATC.</p>';
@@ -111,7 +111,7 @@ async function loadATCStatus() {
 
 async function loadFlightPlans() {
   try {
-    const response = await fetch('https://24data.ptfs.app/acft-data'); // Use real endpoint
+    const response = await fetch('https://24data.ptfs.app/acft-data');
     const data = await response.json();
 
     const flightTrackerContent = document.getElementById('flight-tracker-status');
